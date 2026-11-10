@@ -1,0 +1,19 @@
+{
+  "backgroundImage": "ssss.png",
+  "mbgb":"mob.png",
+  "ProfilePic":"runner.gif",
+  "audio": {
+    "cgpa6":"cgpa6.ogg",
+    "cgpa8":"cgpa8.ogg",
+    "cgpa9":"cgpa9.ogg",
+    "god": "god.ogg"
+  },
+  "titles": {
+    "below6": "Keep Going! Every Step Counts! 💪",
+    "between6and7": "You're Building Something Great! 🌟",
+    "between7and8_9": "Solid Performance! Aim Higher! 🚀",
+    "between9and9_9": "Outstanding Achievement! 🏆",
+    "above9_9": "Legendary Performance! 👑",
+    "default": "Time to Shine! ✨"
+  }
+}

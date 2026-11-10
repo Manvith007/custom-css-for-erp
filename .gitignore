@@ -1,0 +1,9 @@
+.env
+.vscode/
+music/
+planets/
+back.png
+creep.js
+creepybg.png
+other.js
+sort.js

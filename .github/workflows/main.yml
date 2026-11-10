@@ -1,0 +1,60 @@
+name: Manual Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - release-notes.txt
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.extract.outputs.tag }}
+      title: ${{ steps.extract.outputs.title }}
+      notes: ${{ steps.extract.outputs.notes }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Set up Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Extract release metadata from release-notes.txt
+        id: extract
+        run: |
+          TAG=$(grep '^tag:' release-notes.txt | cut -d':' -f2- | xargs)
+          TITLE=$(grep '^title:' release-notes.txt | cut -d':' -f2- | xargs)
+
+          NOTES=$(awk '/^notes:/ {flag=1; next} /^tag:|^title:/ {flag=0} flag' release-notes.txt)
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Git tag
+        run: |
+          TAG=${{ steps.extract.outputs.tag }}
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists. Skipping tag creation."
+          else
+            git tag "$TAG"
+            git push origin "$TAG"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.extract.outputs.tag }}
+          name: ${{ steps.extract.outputs.title }}
+          body: ${{ steps.extract.outputs.notes }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}

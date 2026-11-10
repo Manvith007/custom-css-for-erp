@@ -1,0 +1,106 @@
+{
+  "manifest_version": 3,
+  "name": "Custom CSS for ERP",
+  "version": "3.6",
+  "description": "Added bg img, removed footer, added music player inside the ERP, Modified home screen and many more. Registers: accurate attendance + booklet download. All-time login (keepalive + session keeper) + auto login fill + captcha autofill + full course names across timetable and exam seating.",
+  "author": "Manvith Chowdary",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "alarms",
+    "cookies"
+  ],
+  "host_permissions": [
+    "https://newerp.kluniversity.in/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "keepalive.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://newerp.kluniversity.in/",
+        "https://newerp.kluniversity.in/index.php",
+        "https://newerp.kluniversity.in/index.php?r=site%2Findex"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://newerp.kluniversity.in/*"
+      ],
+      "exclude_matches": [
+        "https://newerp.kluniversity.in/",
+        "https://newerp.kluniversity.in/index.php",
+        "https://newerp.kluniversity.in/index.php?r=site%2Findex"
+      ],
+      "js": [
+        "ccc.js",
+        "booklet.js",
+        "att_accuracy.js",
+        "keeper.js",
+        "login.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://newerp.kluniversity.in/*"
+      ],
+      "js": [
+        "coursenames.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://newerp.kluniversity.in/*"
+      ],
+      "js": [
+        "lib/ort.min.js",
+        "captcha.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "*.png",
+        "*.jpg",
+        "*.jpeg",
+        "*.gif",
+        "music/*.mp3",
+        "*.ogg",
+        "files.json",
+        "user.json",
+        "planets/*.png",
+        "music/*.wav",
+        "music/*.ogg",
+        "model/crnn.onnx",
+        "model/crnn.json",
+        "lib/ort-wasm-simd.wasm",
+        "lib/ort-wasm.wasm"
+      ],
+      "matches": [
+        "https://newerp.kluniversity.in/*"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "l16.png",
+    "48": "l48.png",
+    "128": "l128.png"
+  }
+}
